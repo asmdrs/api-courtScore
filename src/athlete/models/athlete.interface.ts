@@ -1,3 +1,5 @@
+import { Gender } from "src/shared/enums/Gender.enum";
+
 export interface Athlete {
   id?: string;
   name: string;
@@ -5,5 +7,4 @@ export interface Athlete {
   matchesWon?: number;
   groupId?: string;
   gender?: Gender;
-  userId?: string;
 }

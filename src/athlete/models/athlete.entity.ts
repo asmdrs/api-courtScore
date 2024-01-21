@@ -1,6 +1,6 @@
 import { UserEntity } from 'src/auth/models/user.entity';
-import { User } from 'src/auth/models/user.interface';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Gender } from 'src/shared/enums/Gender.enum';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('athlete')
 export class AthleteEntity {
@@ -10,18 +10,19 @@ export class AthleteEntity {
   @Column()
   name: string;
 
-  @Column()
-  matchesPlayed: number;
+  @Column({ nullable: true })
+  matchesPlayed?: number;
 
-	@Column() 	
+	@Column({ nullable: true }) 	
 	matchesWon?: number;
 
 	@Column()
 	groupId: string;
 
-	@Column()
+	@Column({type: 'enum', enum: Gender, default: Gender.NB})
 	gender: Gender;
 
-  @OneToOne(() => UserEntity, (user) => user.id)
-  user: User | null;
+  @OneToOne(() => UserEntity, user => user.athlete)
+  @JoinColumn()
+  user?: UserEntity;
 }

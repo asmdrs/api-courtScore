@@ -4,6 +4,7 @@ import { AthleteEntity } from '../models/athlete.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Athlete } from '../models/athlete.interface';
 import { Observable, from } from 'rxjs';
+import { User } from 'src/auth/models/user.interface';
 
 @Injectable()
 export class AthleteService {
@@ -25,7 +26,7 @@ export class AthleteService {
       
     }
 
-    changeAthlete(id: string, athlete: Athlete): Observable<UpdateResult> {
+    changeAthlete(id: string, athlete: Athlete, user: User): Observable<UpdateResult> {
       return from(this.athleteRepository.update(id, athlete))
     }
 
