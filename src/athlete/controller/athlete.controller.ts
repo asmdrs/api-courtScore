@@ -9,7 +9,6 @@ import { JwtGuard } from 'src/auth/guard/jwt.guard';
 export class AthleteController {
   constructor(private athleteService: AthleteService ){}
 
-
   @Post()
   createAthlete(@Body() athlete: Athlete): Observable<Athlete> {
     return this.athleteService.createAthlete(athlete);

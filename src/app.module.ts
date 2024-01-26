@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AthleteModule } from './athlete/athlete.module';
 import { AuthModule } from './auth/auth.module';
+import { TournamentManagerModule } from './tournament-manager/tournament-manager.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     AthleteModule,
     AuthModule,
+    TournamentManagerModule,
+    GroupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

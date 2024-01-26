@@ -9,6 +9,8 @@ import { JwtService } from '@nestjs/jwt';
 
 import { Athlete } from 'src/athlete/models/athlete.interface';
 import { AthleteEntity } from 'src/athlete/models/athlete.entity';
+import { TournamentManager } from 'src/tournament-manager/models/tournamentManager.interface';
+import { TournamentManagerEntity } from 'src/tournament-manager/models/tournamentManager.entity';
 
 @Injectable()
 export class AuthService {
@@ -19,48 +21,11 @@ export class AuthService {
     private jwtService: JwtService,
     @InjectRepository(AthleteEntity)
     private readonly athleteRepository: Repository<AthleteEntity>,
+    @InjectRepository(TournamentManagerEntity)
+    private readonly managerRepository: Repository<TournamentManagerEntity>
     ) {}
 
-  hashPassword(password: string): Observable<string>{
-    return from(bcrypt.hash(password, 12));
-  }
-
-  private mapAthleteEntity(athlete: Athlete): AthleteEntity {
-    const { name, groupId, gender } = athlete;
-    const athleteEntity = new AthleteEntity();
-
-    athleteEntity.name = name;
-    athleteEntity.groupId = groupId;
-    athleteEntity.gender = gender;
-    
-    return athleteEntity 
-  }
-
-  // registerNewAccount(user: User, athlete?: Athlete): Observable<User>{
-  //   const { email, password, firstName, lastName, role } = user;
-
-  //   return this.hashPassword(password).pipe(
-  //     switchMap((hashedPassword: string) =>{
-  //           return from( 
-  //             this.userRepository.save({
-  //             email,
-  //             firstName,
-  //             lastName,
-  //             role,
-  //             password: hashedPassword,
-  //             athlete: athlete ? this.mapAthleteEntity(athlete) : null
-  //           }),
-  //           ).pipe(
-  //               map((user: User) => {
-  //                 delete user.password;
-  //                 return user;
-  //               })
-  //           )    
-  //         })
-  //       );
-  // };
-
-  registerNewAccount(user: User, athlete?: Athlete): Observable<User> {
+  registerNewAccount(user: User, athlete?: Athlete ): Observable<User> {
     const { email, password, firstName, lastName, role } = user;
 
     return this.hashPassword(password).pipe(
@@ -79,6 +44,38 @@ export class AuthService {
               const athleteEntity = this.mapAthleteEntity(athlete);
               athleteEntity.user = savedUser; // Associe o usuário ao atleta
               return from(this.athleteRepository.save(athleteEntity));
+            } else {
+              return of(savedUser);
+            }
+          }),
+        ),
+      ),
+      map((savedUser: User) => {
+        delete savedUser.password;
+        return savedUser;
+      }),
+    );
+  }
+
+  registerNewManagerAccount(user: User, manager?: TournamentManager ): Observable<User> {
+    const { email, password, firstName, lastName, role } = user;
+
+    return this.hashPassword(password).pipe(
+      switchMap((hashedPassword: string) =>
+        from(
+          this.userRepository.save({
+            email,
+            firstName,
+            lastName,
+            role,
+            password: hashedPassword,
+          }),
+        ).pipe(
+          switchMap((savedUser: UserEntity) => {
+            if (manager) {
+              const managerEntity = this.mapTournamentManager(manager);
+              managerEntity.user = savedUser; // Associe o usuário ao atleta
+              return from(this.managerRepository.save(managerEntity));
             } else {
               return of(savedUser);
             }
@@ -113,7 +110,29 @@ export class AuthService {
     const validUser =  await this.validateUser(email, password);
     const payload = {sub: validUser.id, username: validUser.email}
     return this.jwtService.signAsync(payload)
-    }
+  }
+  
+  hashPassword(password: string): Observable<string>{
+    return from(bcrypt.hash(password, 12));
+  }
+
+  private mapAthleteEntity(athlete: Athlete): AthleteEntity {
+    const { name, gender } = athlete;
+    const athleteEntity = new AthleteEntity();
+
+    athleteEntity.name = name;
+    athleteEntity.gender = gender;
+    
+    return athleteEntity 
+  }
+
+  private mapTournamentManager(manager: TournamentManager): TournamentManagerEntity {
+    const { name } = manager;
+    const managerEntity = new TournamentManagerEntity();
+
+    managerEntity.name = name;
+    return managerEntity;
+  }
 
 }
 

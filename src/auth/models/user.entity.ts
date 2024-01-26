@@ -1,6 +1,9 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./role.enum";
 import { AthleteEntity } from "src/athlete/models/athlete.entity";
+import { TournamentManagerEntity } from "src/tournament-manager/models/tournamentManager.entity";
+import { GroupEntity } from "src/group/models/group.entity";
+import { Group } from "src/group/models/group.interface";
 
 @Entity('user')
 export class UserEntity{
@@ -26,4 +29,11 @@ export class UserEntity{
   @JoinColumn()
   athlete?: AthleteEntity;
 
+  @OneToOne(()=> TournamentManagerEntity, tournamentManager => tournamentManager.user, { cascade: true })
+  @JoinColumn()
+  tournamentManager?: TournamentManagerEntity;
+
+  @ManyToMany(()=> GroupEntity, group => group.athletes, { cascade: true })
+  @JoinColumn()
+  group?: Group;
 }

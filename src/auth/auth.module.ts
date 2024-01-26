@@ -9,6 +9,7 @@ import { JwtStrategy } from './guard/jwt.strategy';
 import { config } from 'dotenv';
 import { AthleteModule } from 'src/athlete/athlete.module';
 import { AthleteEntity } from 'src/athlete/models/athlete.entity';
+import { TournamentManagerEntity } from 'src/tournament-manager/models/tournamentManager.entity';
 config();
 @Module({
   imports: [
@@ -18,6 +19,7 @@ config();
     }),
      TypeOrmModule.forFeature([UserEntity]),
      TypeOrmModule.forFeature([AthleteEntity]),
+     TypeOrmModule.forFeature([TournamentManagerEntity]),
     AthleteModule
     ],
   providers: [AuthService, JwtGuard, JwtStrategy],
