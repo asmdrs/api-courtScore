@@ -7,6 +7,9 @@ import { AthleteModule } from './athlete/athlete.module';
 import { AuthModule } from './auth/auth.module';
 import { TournamentManagerModule } from './tournament-manager/tournament-manager.module';
 import { GroupModule } from './group/group.module';
+import { MatchModule } from './match/match.module';
+import { CupPhaseModule } from './cup-phase/cup-phase.module';
+import { TournamentModule } from './tournament/tournament.module';
 
 @Module({
   imports: [
@@ -25,6 +28,9 @@ import { GroupModule } from './group/group.module';
     AuthModule,
     TournamentManagerModule,
     GroupModule,
+    MatchModule,
+    CupPhaseModule,
+    TournamentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,8 @@
 import { UserEntity } from 'src/auth/models/user.entity';
+import { MatchEntity } from 'src/match/models/match.entity';
 import { Gender } from 'src/shared/enums/Gender.enum';
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TournamentEntity } from 'src/tournament/models/tournament.entity';
+import { Column, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('athlete')
 export class AthleteEntity {
@@ -25,4 +27,16 @@ export class AthleteEntity {
   @OneToOne(() => UserEntity, user => user.athlete)
   @JoinColumn()
   user?: UserEntity;
+
+  @OneToMany(() => MatchEntity, match => match.athlete1)
+  matchesAsAthlete1: MatchEntity[];
+  
+  @OneToMany(() => MatchEntity, match => match.athlete2)
+  matchesAsAthlete2: MatchEntity[];
+  
+  @OneToMany(() => MatchEntity, match => match.winner)
+  matchesAsWinner: MatchEntity[];
+
+  @ManyToMany(() => TournamentEntity, tournament => tournament.athletes)
+  tournaments: TournamentEntity[];
 }
