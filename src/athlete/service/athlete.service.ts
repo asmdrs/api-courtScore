@@ -3,8 +3,8 @@ import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { AthleteEntity } from '../models/athlete.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Athlete } from '../models/athlete.interface';
-import { Observable, from } from 'rxjs';
-import { User } from 'src/auth/models/user.interface';
+import { Observable, from, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 
 @Injectable()
 export class AthleteService {
@@ -22,14 +22,33 @@ export class AthleteService {
     }
 
     findById(id: string): Observable<Athlete | undefined> {
-      return from(this.athleteRepository.findOneBy({ id }));
-      
+      return from(this.athleteRepository.findOneBy({ id }));    
     }
 
-    changeAthlete(id: string, athlete: Athlete, user: User): Observable<UpdateResult> {
-      return from(this.athleteRepository.update(id, athlete))
+    findByGroup(userId: string): Observable<Athlete[] | undefined> {
+      return from(this.athleteRepository.findOne({ where: { user: { id: userId } } })).pipe(
+        switchMap(userAthlete => {
+          if (!userAthlete) {
+            return of(null);
+          } else {
+            return from(this.athleteRepository.find({where: {groupId: userAthlete.groupId}}));
+          }
+        })
+      );
     }
 
+    changeAthlete(id: string, athlete: AthleteEntity, userId: string): Observable<UpdateResult> {
+      return from(this.athleteRepository.findOne({ where: { user: { id: userId } } })).pipe(
+        switchMap(userAthlete => {
+          if (!userAthlete || userAthlete.id !== id) {
+            return of(null);
+          } else {
+            return from(this.athleteRepository.update(id, athlete));
+          }
+        })
+      );
+    }
+    
     deleteAthlete(id:string): Observable<DeleteResult>{
       return from(this.athleteRepository.delete(id));
     }
