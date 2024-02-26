@@ -1,7 +1,7 @@
-import { AthleteEntity } from "src/athlete/models/athlete.entity";
-import { CupPhaseEntity } from "src/cup-phase/models/cupPhase.entity";
-import { GroupEntity } from "src/group/models/group.entity";
-import { TournamentManagerEntity } from "src/tournament-manager/models/tournamentManager.entity";
+import { AthleteEntity } from "../../athlete/models/athlete.entity";
+import { CupPhaseEntity } from "../../cup-phase/models/cupPhase.entity";
+import { GroupEntity } from "../../group/models/group.entity";
+import { TournamentManagerEntity } from "../../tournament-manager/models/tournamentManager.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('tournament')

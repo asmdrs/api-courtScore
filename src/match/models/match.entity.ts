@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
-import { AthleteEntity } from "src/athlete/models/athlete.entity";
-import { CupPhaseEntity } from "src/cup-phase/models/cupPhase.entity";
+import { AthleteEntity } from "../../athlete/models/athlete.entity";
+import { CupPhaseEntity } from "../../cup-phase/models/cupPhase.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('match')

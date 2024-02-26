@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AthleteService } from '../service/athlete.service';
 import { Athlete } from '../models/athlete.interface';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
-import { Roles } from 'src/decorators/roles.decorator';
-import { Role } from 'src/auth/models/role.enum';
+import { JwtGuard } from '../../auth/guard/jwt.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { Role } from '../../auth/models/role.enum';
 import { AthleteEntity } from '../models/athlete.entity';
 import { JwtService } from '@nestjs/jwt';
 
@@ -43,6 +43,9 @@ export class AthleteController {
   @Put(':id')
   findAllAthletesByGroup(@Request() req): Observable<Athlete[]> {
     const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('Token de autorização não fornecido.');
+    }
     const decodedToken = this.jwtService.decode(token) as { sub: string };
     const userId = decodedToken.sub;
 
