@@ -4,6 +4,8 @@ import { Athlete } from '../models/athlete.interface';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/auth/models/role.enum';
 
 @Controller('athlete')
 export class AthleteController {
@@ -20,6 +22,7 @@ export class AthleteController {
   }
   
   @UseGuards(JwtGuard)
+  @Roles(Role.ATHLETE)
   @Put(':id')
   changeAthlete(@Param('id') id: string, @Body() athlete: Athlete, @Request() req): Observable<UpdateResult> {
     return this.athleteService.changeAthlete(id, athlete, req);

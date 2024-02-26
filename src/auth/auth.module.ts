@@ -10,6 +10,8 @@ import { config } from 'dotenv';
 import { AthleteModule } from 'src/athlete/athlete.module';
 import { AthleteEntity } from 'src/athlete/models/athlete.entity';
 import { TournamentManagerEntity } from 'src/tournament-manager/models/tournamentManager.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './guard/roles.guard';
 config();
 @Module({
   imports: [
@@ -22,7 +24,12 @@ config();
      TypeOrmModule.forFeature([TournamentManagerEntity]),
     AthleteModule
     ],
-  providers: [AuthService, JwtGuard, JwtStrategy],
+  providers: [AuthService, JwtGuard, JwtStrategy,   
+    {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },
+],
   controllers: [AuthController]
 })
 export class AuthModule {}
