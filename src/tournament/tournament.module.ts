@@ -9,10 +9,11 @@ import { CupPhaseEntity } from 'src/cup-phase/models/cupPhase.entity';
 import { MatchEntity } from 'src/match/models/match.entity';
 import { GroupEntity } from 'src/group/models/group.entity';
 import { TournamentManagerEntity } from 'src/tournament-manager/models/tournamentManager.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [ TypeOrmModule.forFeature([TournamentEntity, AthleteEntity, CupPhaseEntity, MatchEntity,GroupEntity, TournamentManagerEntity])],
   controllers: [TournamentController],
-  providers: [TournamentService, AthleteService]
+  providers: [TournamentService, AthleteService, , JwtService]
 })
 export class TournamentModule {}

@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Role } from "./role.enum";
-import { AthleteEntity } from "src/athlete/models/athlete.entity";
-import { TournamentManagerEntity } from "src/tournament-manager/models/tournamentManager.entity";
-import { GroupEntity } from "src/group/models/group.entity";
-import { Group } from "src/group/models/group.interface";
+import { AthleteEntity } from "../../athlete/models/athlete.entity";
+import { TournamentManagerEntity } from "../../tournament-manager/models/tournamentManager.entity";
+import { GroupEntity } from "../../group/models/group.entity";
+import { Group } from "../../group/models/group.interface";
 
 @Entity('user')
 export class UserEntity{

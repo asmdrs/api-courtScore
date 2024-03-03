@@ -1,6 +1,6 @@
-import { UserEntity } from "src/auth/models/user.entity";
-import { GroupEntity } from "src/group/models/group.entity";
-import { TournamentEntity } from "src/tournament/models/tournament.entity";
+import { UserEntity } from "../../auth/models/user.entity";
+import { GroupEntity } from "../../group/models/group.entity";
+import { TournamentEntity } from "../../tournament/models/tournament.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('tournamentManager')

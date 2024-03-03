@@ -42,7 +42,7 @@ export class AuthService {
           switchMap((savedUser: UserEntity) => {
             if (athlete) {
               const athleteEntity = this.mapAthleteEntity(athlete);
-              athleteEntity.user = savedUser; // Associe o usuário ao atleta
+              athleteEntity.user = savedUser;
               return from(this.athleteRepository.save(athleteEntity));
             } else {
               return of(savedUser);
@@ -74,7 +74,7 @@ export class AuthService {
           switchMap((savedUser: UserEntity) => {
             if (manager) {
               const managerEntity = this.mapTournamentManager(manager);
-              managerEntity.user = savedUser; // Associe o usuário ao atleta
+              managerEntity.user = savedUser; 
               return from(this.managerRepository.save(managerEntity));
             } else {
               return of(savedUser);
@@ -108,7 +108,7 @@ export class AuthService {
   async login(user: User): Promise<string> {
     const { email, password } = user;
     const validUser =  await this.validateUser(email, password);
-    const payload = {sub: validUser.id, username: validUser.email}
+    const payload = {sub: validUser.id, username: validUser.email, role: validUser.role}
     return this.jwtService.signAsync(payload)
   }
   

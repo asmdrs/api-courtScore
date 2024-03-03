@@ -1,7 +1,7 @@
-import { UserEntity } from 'src/auth/models/user.entity';
-import { MatchEntity } from 'src/match/models/match.entity';
-import { Gender } from 'src/shared/enums/Gender.enum';
-import { TournamentEntity } from 'src/tournament/models/tournament.entity';
+import { UserEntity } from '../../auth/models/user.entity';
+import { MatchEntity } from '../../match/models/match.entity';
+import { Gender } from '../../shared/enums/Gender.enum';
+import { TournamentEntity } from '../../tournament/models/tournament.entity';
 import { Column, Entity, JoinColumn, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('athlete')

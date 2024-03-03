@@ -1,7 +1,7 @@
 import { Exclude } from "class-transformer";
-import { MatchEntity } from "src/match/models/match.entity";
-import { PhaseName } from "src/shared/enums/PhaseName.enum";
-import { TournamentEntity } from "src/tournament/models/tournament.entity";
+import { MatchEntity } from "../../match/models/match.entity";
+import { PhaseName } from "../../shared/enums/PhaseName.enum";
+import { TournamentEntity } from "../../tournament/models/tournament.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('cupPhase')

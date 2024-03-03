@@ -1,14 +1,22 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { AthleteService } from '../service/athlete.service';
 import { Athlete } from '../models/athlete.interface';
 import { Observable } from 'rxjs';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { JwtGuard } from '../../auth/guard/jwt.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { Role } from '../../auth/models/role.enum';
+import { AthleteEntity } from '../models/athlete.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('athlete')
 export class AthleteController {
-  constructor(private athleteService: AthleteService ){}
+  constructor(
+    private athleteService: AthleteService,
+    private readonly jwtService: JwtService
+    ){}
 
+  @UseGuards(JwtGuard)
   @Post()
   createAthlete(@Body() athlete: Athlete): Observable<Athlete> {
     return this.athleteService.createAthlete(athlete);
@@ -20,11 +28,32 @@ export class AthleteController {
   }
   
   @UseGuards(JwtGuard)
+  @Roles(Role.ATHLETE)
   @Put(':id')
-  changeAthlete(@Param('id') id: string, @Body() athlete: Athlete, @Request() req): Observable<UpdateResult> {
-    return this.athleteService.changeAthlete(id, athlete, req);
+  changeAthlete(@Param('id') id: string, @Body() athlete: AthleteEntity, @Request() req): Observable<UpdateResult> {
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = this.jwtService.decode(token) as { sub: string };
+    const userId = decodedToken.sub;
+
+    return this.athleteService.changeAthlete(id, athlete, userId);
   }
 
+  @UseGuards(JwtGuard)
+  @Roles(Role.ATHLETE)
+  @Put(':id')
+  findAllAthletesByGroup(@Request() req): Observable<Athlete[]> {
+    const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+      throw new UnauthorizedException('Token de autorização não fornecido.');
+    }
+    const decodedToken = this.jwtService.decode(token) as { sub: string };
+    const userId = decodedToken.sub;
+
+    return this.athleteService.findByGroup(userId);
+  }
+
+  @UseGuards(JwtGuard)
+  @Roles(Role.ADMIN)
   @Delete(':id')
   deleteAthlete(@Param('id') id: string): Observable<DeleteResult> {
     return this.athleteService.deleteAthlete(id);
